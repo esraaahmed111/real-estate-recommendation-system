@@ -1,4 +1,4 @@
-# Import Libraries
+# Import libraries
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -12,14 +12,14 @@ import warnings
 warnings.filterwarnings('ignore')
 
 
-# Load Data 
+# Load data 
 df = pd.read_csv('property_finder.csv')
 pd.set_option("display.max_columns", None)
 
 print("Dataset Shape:", df.shape)
 
 
-# Data Cleaning
+# Data cleaning
 df = df[df['bathrooms'] != 'None']
 df['bathrooms'] = pd.to_numeric(df['bathrooms'], errors='coerce').astype('Int64')
 df['bedrooms']  = pd.to_numeric(df['bedrooms'],  errors='coerce').astype('Int64')
@@ -44,7 +44,8 @@ df.drop(columns=['url', 'id', 'location_full_name', 'has_view_360',
 df = df.drop_duplicates()
 df.reset_index(drop=True, inplace=True)
 
-# Outlier removal
+
+# Outliers
 for col in ['price', 'size', 'bedrooms', 'bathrooms']:
     Q1 = df[col].quantile(0.25)
     Q3 = df[col].quantile(0.75)
@@ -126,7 +127,7 @@ plt.tight_layout()
 plt.show()
 
 
-# Feature Engineering 
+# Feature engineering 
 df['price_per_sqm'] = df['price'] / df['size']
 df['total_rooms']   = df['bedrooms'].astype(float) + df['bathrooms'].astype(float)
 
@@ -151,7 +152,7 @@ prep_data = np.hstack([model_df[numerical_cols].to_numpy(),
                        model_df[categorical_cols].to_numpy()])
 
 
-# KNN Model
+# KNN model
 knn_model = NearestNeighbors(metric='cosine', algorithm='brute', n_jobs=-1)
 knn_model.fit(prep_data)
 
@@ -169,10 +170,10 @@ print("\nRecommendations for property at index 7:")
 print(recommend_by_index(7).to_string(index=False))
 
 
-# 7. Dynamic Filter + KNN On Filtered Results
+# 7. Dynamic filter + KNN on filtered results
 def dynamic_filter(df):
     """Filter properties by user input, then run KNN on results."""
-    print("\n🔍 Real Estate Search — press Enter to skip any field")
+    print("\n Real Estate Search — press Enter to skip any field")
 
     city     = input(f"\nCity options: {sorted(df['city'].unique().tolist())}\nEnter city (or skip): ").strip().capitalize()
     town     = input(f"\nEnter town (or skip): ").strip().capitalize()

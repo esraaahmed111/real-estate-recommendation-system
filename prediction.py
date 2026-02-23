@@ -10,6 +10,7 @@ from sklearn.compose import ColumnTransformer
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 from sklearn.pipeline import Pipeline
 from sklearn.tree import DecisionTreeRegressor
+
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -114,12 +115,12 @@ plt.tight_layout()
 plt.show()
 
 
-# 5. Feature Engineering
+# Feature engineering
 df['price_per_sqm'] = df['price'] / df['size']
 df['total_rooms'] = df['bedrooms'].astype(float) + df['bathrooms'].astype(float)
 
 
-# Prepare Features 
+# Prepare features 
 categorical_cols = ['property_type', 'city', 'town', 'district/compound',
                     'completion_status', 'furnished']
 numerical_cols   = ['lat', 'lon', 'bedrooms', 'bathrooms', 'size',
@@ -167,8 +168,6 @@ print(f"MAE on test  : {bag_mae:,.0f} EGP")
 
 
 # Histgradiantboosting
-
-# Transform data for boost model
 X_train_trans = column_trans.fit_transform(X_train)
 X_test_trans  = column_trans.transform(X_test)
 
@@ -194,7 +193,7 @@ print(f"MAE       : {mean_absolute_error(y_test, y_test_pred):,.0f} EGP")
 print(f"RMSE      : {np.sqrt(mean_squared_error(y_test, y_test_pred)):,.0f} EGP")
 
 
-# Model Comparison
+# Model comparison
 comparison = pd.DataFrame({
     'Model'  : ['Bagging Regressor', 'HistGradientBoosting'],
     'Train R²': [round(bag_train_r2, 4), round(r2_score(y_train, y_train_pred), 4)],
